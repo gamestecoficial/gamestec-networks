@@ -7,8 +7,6 @@
   
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-  <!-- Estilos y fuentes -->
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -57,20 +55,62 @@
         <p id="song-title">Take it easy</p>
       </div>
       
-      <!-- NUEVOS BOTONES DE CONTROL -->
-      <div class="music-controls">
-        <button id="prev-btn" class="control-btn" title="Canción anterior">
-          <i class="fas fa-backward-step"></i>
-        </button>
-        <button id="loop-btn" class="control-btn" title="Activar repetición">
-          <i class="fas fa-repeat"></i>
-        </button>
-        <button id="next-btn" class="control-btn" title="Siguiente canción">
-          <i class="fas fa-forward-step"></i>
-        </button>
+    <!-- Controles de navegación -->
+    <div class="music-controls">
+    <button id="prev-btn" class="control-btn" title="Canción anterior">
+    <i class="fas fa-backward-step"></i>
+    </button>
+    <button id="loop-btn" class="control-btn" title="Activar repetición">
+    <i class="fas fa-repeat"></i>
+    </button>
+    <button id="next-btn" class="control-btn" title="Siguiente canción">
+    <i class="fas fa-forward-step"></i>
+    </button>
+
+    <!-- 🆕 BOTÓN FULLSCREEN -->
+    <button id="fullscreen-btn" class="control-btn" title="Pantalla completa">
+    <i class="fas fa-expand"></i>
+    </button>
+  </div>
+          
+      <!-- CONTROLES CON VISUALIZADOR INTEGRADO -->
+      <div class="custom-audio-controls">
+        <!-- Barra de progreso con visualizador integrado -->
+        <div class="progress-control-integrated">
+          <button id="play-pause-btn" class="control-btn play-pause-integrated" title="Play/Pause">
+            <i class="fas fa-play"></i>
+          </button>
+          
+          <div class="progress-visual-container">
+            <div class="time-displays">
+              <span id="current-time" class="time-display">0:00</span>
+              <span id="duration" class="time-display">0:00</span>
+            </div>
+            
+            <!-- Contenedor del visualizador y barra de progreso -->
+            <div class="visualizer-progress-wrapper">
+              <canvas id="visualizer-canvas" class="visualizer-background"></canvas>
+              <input type="range" id="progress-bar" class="progress-bar-overlay" value="0" min="0" max="100">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Control de volumen -->
+        <div class="volume-control">
+          <button id="mute-btn" class="control-btn" title="Silenciar">
+            <i class="fas fa-volume-high"></i>
+          </button>
+          <input type="range" id="volume-bar" class="custom-slider" value="80" min="0" max="100">
+        </div>
       </div>
-      
-      <audio id="audio-player" controls>
+
+      <!-- Audio hidden -->
+      <audio id="audio-player"></audio>
+
+      <!-- Efectos de sonido para hover -->
+      <audio id="hover-sound" preload="auto">
+        <source src="sounds/Sfx-hover-networks.mp3" type="audio/mpeg">
+        <source src="sounds/hover-sound.wav" type="audio/wav">
       </audio>
     </div>
 
@@ -86,13 +126,10 @@
       const enterBtn = document.getElementById("enter-btn");
       const mainContent = document.getElementById("main-content");
       
-      // Asegurar que el contenido principal esté oculto al inicio
       mainContent.style.display = 'none';
       
-      // Evento para el botón de entrada
       if (enterBtn) {
           enterBtn.addEventListener("click", () => {
-              console.log("Botón clickeado - quitando splash");
               splash.style.opacity = '0';
               splash.style.transition = 'opacity 0.5s ease';
               
@@ -104,11 +141,8 @@
           });
       }
       
-      // También permitir click en toda la pantalla splash
       splash.addEventListener("click", (e) => {
-          // Solo actuar si se hace click directamente en el splash (no en sus hijos)
           if (e.target === splash) {
-              console.log("Splash clickeado - quitando splash");
               splash.style.opacity = '0';
               splash.style.transition = 'opacity 0.5s ease';
               
@@ -175,15 +209,9 @@
 
   // Función para cambiar fondos de video
   function changeBackground(backgroundConfig) {
-      console.log('🎬 Cambiando fondo:', backgroundConfig);
-      
       const container = document.querySelector('.background-container');
-      if (!container) {
-          console.error('❌ No se encuentra .background-container');
-          return;
-      }
+      if (!container) return;
       
-      // Remover video anterior
       const oldVideo = container.querySelector('.background-video');
       if (oldVideo) {
           oldVideo.classList.remove('active');
@@ -195,7 +223,6 @@
       }
       
       if (backgroundConfig.type === "video" && backgroundConfig.src) {
-          // Crear nuevo elemento video
           const newVideo = document.createElement('video');
           newVideo.className = 'background-video';
           newVideo.autoplay = true;
@@ -207,16 +234,12 @@
           source.type = 'video/mp4';
           newVideo.appendChild(source);
           
-          // Manejar errores
           newVideo.addEventListener('error', () => {
-              console.warn('❌ Error cargando video:', backgroundConfig.src);
               container.style.background = 'linear-gradient(135deg, #000010, #0a0028, #020024)';
           });
           
-          // Agregar al contenedor
           container.appendChild(newVideo);
           
-          // Activar después de un breve delay
           setTimeout(() => {
               newVideo.classList.add('active');
           }, 50);
@@ -224,25 +247,45 @@
   }
 
   function loadSong(index) {
-      const audioPlayer = document.getElementById("audio-player");
-      const songTitle = document.getElementById("song-title");
-      const cover = document.querySelector(".music-player .cover");
-      
-      const song = songs[index];
-      songTitle.textContent = song.title;
-      cover.src = song.cover;
-      audioPlayer.src = song.src;
-      audioPlayer.loop = isLoop; // ← Mantener estado del loop
-      
-      // 🎬 CAMBIAR FONDO CON CADA CANCIÓN
-      if (song.background) {
-          changeBackground(song.background);
-      }
-      
-      // Reproducir automáticamente
-      audioPlayer.play().catch(e => {
-          console.log("Reproducción automática bloqueada:", e);
+    const audioPlayer = document.getElementById("audio-player");
+    const songTitle = document.getElementById("song-title");
+    const cover = document.querySelector(".music-player .cover");
+    const progressBar = document.getElementById("progress-bar");
+    const currentTimeEl = document.getElementById("current-time");
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    
+    const song = songs[index];
+    songTitle.textContent = song.title;
+    cover.src = song.cover;
+    
+    // Pausar y resetear antes de cargar nueva canción
+    audioPlayer.pause();
+    audioPlayer.currentTime = 0;
+    
+    // Resetear controles visuales
+    progressBar.value = 0;
+    currentTimeEl.textContent = "0:00";
+    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+    playPauseBtn.title = 'Reproducir';
+    
+    // Cargar nueva fuente
+    audioPlayer.src = song.src;
+    audioPlayer.loop = isLoop;
+    
+    // 🎬 CAMBIAR FONDO CON CADA CANCIÓN
+    if (song.background) {
+      changeBackground(song.background);
+    }
+    
+    // Intentar reproducción automática
+    setTimeout(() => {
+      audioPlayer.play().then(() => {
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        playPauseBtn.title = 'Pausar';
+      }).catch(e => {
+        console.log("Reproducción automática bloqueada");
       });
+    }, 500);
   }
 
   // ===== CONTROLES DEL REPRODUCTOR =====
@@ -250,7 +293,15 @@
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     const loopBtn = document.getElementById('loop-btn');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const muteBtn = document.getElementById('mute-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const volumeBar = document.getElementById('volume-bar');
+    const currentTimeEl = document.getElementById('current-time');
+    const durationEl = document.getElementById('duration');
     const audioPlayer = document.getElementById('audio-player');
+
+    let isSeeking = false;
 
     // Botón Anterior
     prevBtn.addEventListener('click', () => {
@@ -279,7 +330,83 @@
       }
     });
 
-    // También mantener la funcionalidad de flechas del teclado
+    // Botón Play/Pause
+    playPauseBtn.addEventListener('click', function() {
+      if (audioPlayer.paused || audioPlayer.ended) {
+        audioPlayer.play().then(() => {
+          playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          playPauseBtn.title = 'Pausar';
+        }).catch(e => {
+          console.log("Error al reproducir:", e);
+        });
+      } else {
+        audioPlayer.pause();
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        playPauseBtn.title = 'Reproducir';
+      }
+    });
+
+    // Botón Mute
+    muteBtn.addEventListener('click', () => {
+      audioPlayer.muted = !audioPlayer.muted;
+      updateVolumeIcon();
+    });
+
+    // Control de volumen
+    volumeBar.addEventListener('input', () => {
+      audioPlayer.volume = volumeBar.value / 100;
+      audioPlayer.muted = false;
+      updateVolumeIcon();
+    });
+
+    function updateVolumeIcon() {
+      const icon = muteBtn.querySelector('i');
+      if (audioPlayer.muted || audioPlayer.volume === 0) {
+        icon.className = 'fas fa-volume-mute';
+        muteBtn.title = 'Activar sonido';
+      } else if (audioPlayer.volume < 0.5) {
+        icon.className = 'fas fa-volume-low';
+        muteBtn.title = 'Silenciar';
+      } else {
+        icon.className = 'fas fa-volume-high';
+        muteBtn.title = 'Silenciar';
+      }
+    }
+
+    // Actualizar progress bar y tiempo
+    audioPlayer.addEventListener('timeupdate', () => {
+      if (!isSeeking && !isNaN(audioPlayer.duration)) {
+        const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        progressBar.value = progress;
+        currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+        durationEl.textContent = formatTime(audioPlayer.duration);
+      }
+    });
+
+    // Seek en la canción
+    progressBar.addEventListener('mousedown', () => {
+      isSeeking = true;
+    });
+
+    progressBar.addEventListener('input', () => {
+      if (!isNaN(audioPlayer.duration)) {
+        const seekTime = (progressBar.value / 100) * audioPlayer.duration;
+        audioPlayer.currentTime = seekTime;
+        currentTimeEl.textContent = formatTime(seekTime);
+      }
+    });
+
+    progressBar.addEventListener('mouseup', () => {
+      isSeeking = false;
+    });
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    // Atajos de teclado
     document.addEventListener("keydown", (e) => {
       if (e.key === "ArrowRight") {
         currentSong = (currentSong + 1) % songs.length;
@@ -288,8 +415,10 @@
         currentSong = (currentSong - 1 + songs.length) % songs.length;
         loadSong(currentSong);
       } else if (e.key === "l" || e.key === "L") {
-        // Tecla L para loop - simular click
         loopBtn.click();
+      } else if (e.key === " " || e.key === "Spacebar") {
+        e.preventDefault();
+        playPauseBtn.click();
       }
     });
   }
@@ -302,18 +431,7 @@
       }
   });
 
-  // Cargar primera canción cuando la página esté lista
-  window.addEventListener('load', () => {
-      // Esperar un poco para que el splash se muestre primero
-      setTimeout(() => {
-          loadSong(currentSong);
-          setupMusicControls(); // ← Inicializar controles
-      }, 1000);
-  });
-
-  // =============================================
-  // DETECTOR DE ORIENTACIÓN PARA MÓVIL
-  // =============================================
+  // ===== DETECTOR DE ORIENTACIÓN PARA MÓVIL =====
   function checkOrientation() {
       const message = document.getElementById('rotate-message');
       const mainContent = document.getElementById('main-content');
@@ -332,12 +450,464 @@
       }
   }
 
-  // Ejecutar al cargar y al girar pantalla
-  window.addEventListener('load', checkOrientation);
+  // ===== CURSOR PERSONALIZADO =====
+  const cursor = document.createElement('div');
+  cursor.className = 'custom-cursor';
+  document.body.appendChild(cursor);
+
+  document.addEventListener('mousemove', (e) => {
+    cursor.style.left = (e.clientX - 3) + 'px';
+    cursor.style.top = (e.clientY - 3) + 'px';
+  });
+
+  const interactiveElements = document.querySelectorAll(
+    'a, button, .control-btn, .music-player, .links a, #enter-btn, audio'
+  );
+
+  interactiveElements.forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2.5)';
+      cursor.style.background = '#ffffff';
+      cursor.style.boxShadow = '0 0 0 2px rgba(143, 143, 220, 0.8), 0 0 20px rgba(255, 105, 180, 0.9)';
+    });
+    
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      cursor.style.background = '#7b5dc6';
+      cursor.style.boxShadow = '0 0 0 1px rgba(255, 255, 255, 0.2), 0 0 10px rgba(108, 99, 255, 0.8)';
+    });
+  });
+
+  function hideCursorOnMobile() {
+    cursor.style.display = window.innerWidth <= 768 ? 'none' : 'block';
+  }
+  hideCursorOnMobile();
+  window.addEventListener('resize', hideCursorOnMobile);
+
+  // ===== EFECTOS DE SONIDO AL HOVER =====
+  function setupHoverSounds() {
+    const hoverSound = document.getElementById('hover-sound');
+    
+    if (!hoverSound) return;
+
+    hoverSound.volume = 0.08;
+    hoverSound.preload = 'auto';
+
+    const hoverElements = document.querySelectorAll(
+      '.links a, .control-btn, #enter-btn'
+    );
+
+    hoverElements.forEach(element => {
+      element.addEventListener('mouseenter', () => {
+        hoverSound.pause();
+        hoverSound.currentTime = 0;
+        hoverSound.play().catch(e => {});
+      });
+    });
+  }
+
+  // ===== VISUALIZADOR SIMULADO =====
+  function setupAudioVisualizer() {
+    const canvas = document.getElementById('visualizer-canvas');
+    const audioPlayer = document.getElementById('audio-player');
+    
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let animationId;
+    let isPlaying = false;
+    let audioLevel = 0;
+
+    function setupCanvas() {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+
+    function setupAudioListeners() {
+      if (audioPlayer) {
+        audioPlayer.addEventListener('play', () => {
+          isPlaying = true;
+          audioLevel = 0.8;
+        });
+        
+        audioPlayer.addEventListener('pause', () => {
+          isPlaying = false;
+          audioLevel = 0.3;
+        });
+        
+        audioPlayer.addEventListener('ended', () => {
+          isPlaying = false;
+          audioLevel = 0.2;
+        });
+        
+        audioPlayer.addEventListener('timeupdate', () => {
+          if (isPlaying) {
+            const time = audioPlayer.currentTime;
+            audioLevel = 0.7 + Math.sin(time * 0.5) * 0.2;
+          }
+        });
+      }
+    }
+
+    function drawVisualizer() {
+      animationId = requestAnimationFrame(drawVisualizer);
+      
+      const width = canvas.width;
+      const height = canvas.height;
+      const currentTime = Date.now() * 0.001;
+      
+      ctx.fillStyle = 'rgba(20, 20, 30, 0.3)';
+      ctx.fillRect(0, 0, width, height);
+      
+      const barCount = 20;
+      const barWidth = width / barCount;
+      
+      for (let i = 0; i < barCount; i++) {
+        let barHeight;
+        
+        if (isPlaying) {
+          const baseWave = Math.sin(currentTime * 2 + i * 0.3) * 0.4 + 0.6;
+          const rhythmWave = Math.sin(currentTime * 8 + i * 0.1) * 0.2;
+          const randomFactor = Math.random() * 0.3;
+          
+          barHeight = (baseWave + rhythmWave + randomFactor) * audioLevel * height;
+        } else {
+          const slowWave = Math.sin(currentTime * 0.5 + i * 0.5) * 0.1 + 0.2;
+          barHeight = slowWave * height * 0.4;
+        }
+        
+        barHeight = Math.max(barHeight, 2);
+        
+        const gradient = ctx.createLinearGradient(0, height, 0, height - barHeight);
+        gradient.addColorStop(0, '#6c63ff');
+        gradient.addColorStop(0.6, '#a855f7');
+        gradient.addColorStop(1, '#ff69b4');
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(i * barWidth, height - barHeight, barWidth - 1, barHeight);
+        
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.fillRect(i * barWidth, height - barHeight, barWidth - 1, 1);
+      }
+    }
+
+    setupCanvas();
+    setupAudioListeners();
+    drawVisualizer();
+    
+    window.addEventListener('resize', setupCanvas);
+  }
+
+  // ===== INICIALIZAR TODO =====
+ window.addEventListener('load', () => {
+    setTimeout(() => {
+        loadSong(currentSong);
+        setupMusicControls();
+        setupHoverSounds();
+        setupAudioVisualizer();
+        setupFullscreen();
+        checkOrientation();
+        
+        // 🆕 AGREGAR DETECCIÓN DE SWIPE
+        setupSwipeDetection();
+        setupBackgroundSwipe();
+    }, 1000);
+});
+
   window.addEventListener('resize', checkOrientation);
   window.addEventListener('orientationchange', function() {
       setTimeout(checkOrientation, 100);
   });
+
+  // ===== FULLSCREEN MODE =====
+function setupFullscreen() {
+  const fullscreenBtn = document.getElementById('fullscreen-btn');
+  const fullscreenIcon = fullscreenBtn.querySelector('i');
+  
+  if (!fullscreenBtn) return;
+  
+  // Verificar si el navegador soporta fullscreen
+  const docElement = document.documentElement;
+  const isFullscreenSupported = (
+    docElement.requestFullscreen ||
+    docElement.mozRequestFullScreen ||
+    docElement.webkitRequestFullscreen ||
+    docElement.msRequestFullscreen
+  );
+  
+  if (!isFullscreenSupported) {
+    fullscreenBtn.style.display = 'none';
+    return;
+  }
+  
+  // Función para entrar en fullscreen
+  function enterFullscreen() {
+    if (docElement.requestFullscreen) {
+      docElement.requestFullscreen();
+    } else if (docElement.mozRequestFullScreen) {
+      docElement.mozRequestFullScreen();
+    } else if (docElement.webkitRequestFullscreen) {
+      docElement.webkitRequestFullscreen();
+    } else if (docElement.msRequestFullscreen) {
+      docElement.msRequestFullscreen();
+    }
+  }
+  
+  // Función para salir de fullscreen
+  function exitFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  }
+  
+  // Toggle fullscreen
+  fullscreenBtn.addEventListener('click', function() {
+    if (!document.fullscreenElement &&
+        !document.mozFullScreenElement &&
+        !document.webkitFullscreenElement &&
+        !document.msFullscreenElement) {
+      // Entrar en fullscreen
+      enterFullscreen();
+    } else {
+      // Salir de fullscreen
+      exitFullscreen();
+    }
+  });
+  
+  // Detectar cambios en el estado de fullscreen
+  document.addEventListener('fullscreenchange', updateFullscreenButton);
+  document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+  document.addEventListener('mozfullscreenchange', updateFullscreenButton);
+  document.addEventListener('MSFullscreenChange', updateFullscreenButton);
+  
+  function updateFullscreenButton() {
+    if (document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement) {
+      // Está en fullscreen
+      fullscreenIcon.className = 'fas fa-compress';
+      fullscreenBtn.title = 'Salir de pantalla completa';
+      fullscreenBtn.classList.add('active');
+    } else {
+      // No está en fullscreen
+      fullscreenIcon.className = 'fas fa-expand';
+      fullscreenBtn.title = 'Pantalla completa';
+      fullscreenBtn.classList.remove('active');
+    }
+  }
+  
+  // También permitir gesto de doble tap para fullscreen en móviles
+  let tapCount = 0;
+  document.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 1) {
+      tapCount++;
+      setTimeout(function() {
+        tapCount = 0;
+      }, 300);
+      
+      if (tapCount === 2) {
+        e.preventDefault();
+        if (!document.fullscreenElement) {
+          enterFullscreen();
+        }
+        tapCount = 0;
+      }
+    }
+  });
+  
+  console.log("✅ Fullscreen mode activado");
+}
+
+// ===== DETECCIÓN DE SWIPE =====
+function setupSwipeDetection() {
+    const musicPlayer = document.querySelector('.music-player');
+    const audioPlayer = document.getElementById('audio-player');
+    let startX = 0;
+    let startY = 0;
+    let endX = 0;
+    let endY = 0;
+    let startTime = 0;
+    
+    // Umbrales para detectar swipe
+    const minSwipeDistance = 50; // distancia mínima en píxeles
+    const maxSwipeTime = 500; // tiempo máximo en ms
+    const maxVerticalDeviation = 30; // desviación vertical máxima
+    
+    function handleTouchStart(e) {
+        const touch = e.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+        startTime = Date.now();
+    }
+    
+    function handleTouchEnd(e) {
+        const touch = e.changedTouches[0];
+        endX = touch.clientX;
+        endY = touch.clientY;
+        
+        const swipeTime = Date.now() - startTime;
+        const swipeDistanceX = endX - startX;
+        const swipeDistanceY = endY - startY;
+        
+        // Verificar si es un swipe válido
+        if (swipeTime < maxSwipeTime && 
+            Math.abs(swipeDistanceX) > minSwipeDistance &&
+            Math.abs(swipeDistanceY) < maxVerticalDeviation) {
+            
+            // Swipe izquierda (siguiente canción)
+            if (swipeDistanceX < 0) {
+                currentSong = (currentSong + 1) % songs.length;
+                loadSong(currentSong);
+                showSwipeFeedback('next');
+            }
+            // Swipe derecha (canción anterior)
+            else if (swipeDistanceX > 0) {
+                currentSong = (currentSong - 1 + songs.length) % songs.length;
+                loadSong(currentSong);
+                showSwipeFeedback('prev');
+            }
+        }
+    }
+    
+    // Para mouse (drag) en desktop
+    function handleMouseDown(e) {
+        startX = e.clientX;
+        startY = e.clientY;
+        startTime = Date.now();
+        
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+    }
+    
+    function handleMouseMove(e) {
+        // Solo actualizar posición, la lógica está en mouseUp
+    }
+    
+    function handleMouseUp(e) {
+        endX = e.clientX;
+        endY = e.clientY;
+        
+        const swipeTime = Date.now() - startTime;
+        const swipeDistanceX = endX - startX;
+        const swipeDistanceY = endY - startY;
+        
+        // Umbrales más grandes para mouse
+        const mouseMinSwipeDistance = 80;
+        
+        if (swipeTime < maxSwipeTime && 
+            Math.abs(swipeDistanceX) > mouseMinSwipeDistance &&
+            Math.abs(swipeDistanceY) < maxVerticalDeviation) {
+            
+            if (swipeDistanceX < 0) {
+                currentSong = (currentSong + 1) % songs.length;
+                loadSong(currentSong);
+                showSwipeFeedback('next');
+            }
+            else if (swipeDistanceX > 0) {
+                currentSong = (currentSong - 1 + songs.length) % songs.length;
+                loadSong(currentSong);
+                showSwipeFeedback('prev');
+            }
+        }
+        
+        // Remover event listeners
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+    }
+    
+    // Feedback visual del swipe
+    function showSwipeFeedback(direction) {
+        const feedback = document.createElement('div');
+        feedback.className = `swipe-feedback swipe-${direction}`;
+        feedback.innerHTML = direction === 'next' ? 
+            '<i class="fas fa-forward"></i>' : 
+            '<i class="fas fa-backward"></i>';
+        
+        document.body.appendChild(feedback);
+        
+        // Animación
+        setTimeout(() => {
+            feedback.classList.add('show');
+        }, 10);
+        
+        // Remover después de la animación
+        setTimeout(() => {
+            feedback.classList.remove('show');
+            setTimeout(() => {
+                if (feedback.parentNode) {
+                    feedback.parentNode.removeChild(feedback);
+                }
+            }, 300);
+        }, 1000);
+    }
+    
+    // Event listeners para touch (móvil)
+    musicPlayer.addEventListener('touchstart', handleTouchStart, { passive: true });
+    musicPlayer.addEventListener('touchend', handleTouchEnd, { passive: true });
+    
+    // Event listeners para mouse (desktop)
+    musicPlayer.addEventListener('mousedown', handleMouseDown);
+    
+    // Prevenir comportamiento por defecto en el reproductor
+    musicPlayer.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+    }, { passive: false });
+    
+    console.log("✅ Swipe detection activado");
+}
+
+// ===== DETECCIÓN DE SWIPE EN EL BACKGROUND =====
+function setupBackgroundSwipe() {
+    const backgroundContainer = document.querySelector('.background-container');
+    let startX = 0;
+    let startTime = 0;
+    
+    // Umbrales más grandes para el background
+    const minSwipeDistance = 100;
+    const maxSwipeTime = 800;
+    
+    function handleBackgroundTouchStart(e) {
+        if (e.touches.length === 1) {
+            startX = e.touches[0].clientX;
+            startTime = Date.now();
+        }
+    }
+    
+    function handleBackgroundTouchEnd(e) {
+        if (e.changedTouches.length === 1) {
+            const endX = e.changedTouches[0].clientX;
+            const swipeTime = Date.now() - startTime;
+            const swipeDistance = endX - startX;
+            
+            if (swipeTime < maxSwipeTime && Math.abs(swipeDistance) > minSwipeDistance) {
+                if (swipeDistance < 0) {
+                    // Swipe izquierda - siguiente canción
+                    currentSong = (currentSong + 1) % songs.length;
+                    loadSong(currentSong);
+                    showSwipeFeedback('next');
+                } else {
+                    // Swipe derecha - canción anterior
+                    currentSong = (currentSong - 1 + songs.length) % songs.length;
+                    loadSong(currentSong);
+                    showSwipeFeedback('prev');
+                }
+            }
+        }
+    }
+    
+    // Aplicar al background container también
+    if (backgroundContainer) {
+        backgroundContainer.addEventListener('touchstart', handleBackgroundTouchStart, { passive: true });
+        backgroundContainer.addEventListener('touchend', handleBackgroundTouchEnd, { passive: true });
+    }
+}
   </script>
 
   <!-- Mensaje para girar pantalla -->
