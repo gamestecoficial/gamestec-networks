@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GamesTec</title>
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <!-- Estilos y fuentes -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Splash completo -->
+  <div id="splash">
+    <div class="splash-content">
+      <img src="img/avatar.png" alt="GamesTec Logo" class="splash-logo">
+      <h1>GamesTec</h1>
+      <p>Una nueva era gamer está apunto de comenzar...</p>
+      <div class="spinner"></div>
+      <button id="enter-btn">¡Click para entrar!</button>
+    </div>
+  </div>
+
+  <!-- Todo lo demás de tu página -->
+  <div id="main-content">
+    <!-- Sistema de fondos dinámico -->
+    <div class="background-container">
+      <div class="background-overlay"></div>
+    </div>
+
+    <!-- Imagenes y logos + botoncitos -->
+    <header>
+      <div class="hero">
+        <img src="img/avatar.png" alt="Logo GamesTec" class="logo">
+        <h1>GamesTec</h1>
+        <p>Una nueva era gamer está apunto de comenzar...</p>
+        <div class="links">
+          <a href="https://discord.gg/Mns8m8cSuK" target="_blank"><i class="fa-brands fa-discord"></i></a>
+          <a href="https://www.tiktok.com/@gamestec.oficial" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://www.youtube.com/@gamestecof" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+          <a href="https://x.com/GamesTecOficial" target="_blank"> <i class="fa-brands fa-x-twitter"></i></a>
+          <a href="https://www.twitch.tv/gamestec_oficial" target="_blank"><i class="fa-brands fa-twitch"></i></a>
+          <a href="https://www.instagram.com/gamestec.oficial" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://open.spotify.com/user/317ivwyaqhxkird5zlf3f2efwada?si=6b189e2c879244ec" target="_blank"><i class="fa-brands fa-spotify"></i></a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Reproductor de música -->
+    <div class="music-player">
+      <img src="img/FASSOUNDS-Cover.jpg" alt="Portada" class="cover">
+      <div class="song-info">
+        <p id="song-title">Take it easy</p>
+      </div>
+      
+      <!-- NUEVOS BOTONES DE CONTROL -->
+      <div class="music-controls">
+        <button id="prev-btn" class="control-btn" title="Canción anterior">
+          <i class="fas fa-backward-step"></i>
+        </button>
+        <button id="loop-btn" class="control-btn" title="Activar repetición">
+          <i class="fas fa-repeat"></i>
+        </button>
+        <button id="next-btn" class="control-btn" title="Siguiente canción">
+          <i class="fas fa-forward-step"></i>
+        </button>
+      </div>
+      
+      <audio id="audio-player" controls>
+      </audio>
+    </div>
+
+    <footer>
+      — © 2025 GamesTec —
+    </footer>
+  </div>
+
+  <script>
+  // ===== SPLASH SCREEN =====
+  document.addEventListener("DOMContentLoaded", () => {
+      const splash = document.getElementById("splash");
+      const enterBtn = document.getElementById("enter-btn");
+      const mainContent = document.getElementById("main-content");
+      
+      // Asegurar que el contenido principal esté oculto al inicio
+      mainContent.style.display = 'none';
+      
+      // Evento para el botón de entrada
+      if (enterBtn) {
+          enterBtn.addEventListener("click", () => {
+              console.log("Botón clickeado - quitando splash");
+              splash.style.opacity = '0';
+              splash.style.transition = 'opacity 0.5s ease';
+              
+              setTimeout(() => {
+                  splash.style.display = 'none';
+                  mainContent.style.display = 'block';
+                  document.body.style.overflow = 'auto';
+              }, 500);
+          });
+      }
+      
+      // También permitir click en toda la pantalla splash
+      splash.addEventListener("click", (e) => {
+          // Solo actuar si se hace click directamente en el splash (no en sus hijos)
+          if (e.target === splash) {
+              console.log("Splash clickeado - quitando splash");
+              splash.style.opacity = '0';
+              splash.style.transition = 'opacity 0.5s ease';
+              
+              setTimeout(() => {
+                  splash.style.display = 'none';
+                  mainContent.style.display = 'block';
+                  document.body.style.overflow = 'auto';
+              }, 500);
+          }
+      });
+  });
+
+  // ===== REPRODUCTOR DE MÚSICA =====
+  const songs = [
+      { 
+          title: "Take it easy", 
+          src: "music/Take it easy background-1.mpt", 
+          cover: "img/covers/FASSOUNDS-Cover.jpg",
+          background: {
+              type: "video",
+              src: "img/backgrounds/anime-girl-watching-falling-stars-city-moewalls-com.mpv"
+          }
+      },
+      { 
+          title: "Lo-Fi Background Beats", 
+          src: "music/Lo-Fi Background Music - 2.mpt", 
+          cover: "img/covers/Lo-fi Background-2.jpg",
+          background: {
+              type: "video", 
+              src: "img/backgrounds/child-watching-the-stars-moewalls-com.mpv"
+          }
+      },
+      { 
+          title: "Maybe it was Love", 
+          src: "music/Maybe it was love.mpt", 
+          cover: "img/covers/Lo-Fi Nostalgic - 3.jpg",
+          background: {
+              type: "video",
+              src: "img/backgrounds/mountain-lake-falling-stars-moewalls-com.mpv"
+          }
+      },
+      { 
+          title: "Japan Lo-fi", 
+          src: "music/Cutie Japan Lofi.mpt", 
+          cover: "img/covers/FASSOUNDS-Cover.jpg",
+          background: {
+              type: "video",
+              src: "img/backgrounds/alone-and-sad-moewalls-com.mpv"
+          }
+      },
+      { 
+          title: "Sakura", 
+          src: "music/Sakura - 2.mpt", 
+          cover: "img/covers/Sakura - 2.jpg",
+          background: {
+              type: "video",
+              src: "img/backgrounds/tokyo-sakura-train-station-moewalls-com.mpv"
+          }
+      }
+  ];
+
+  let currentSong = 0;
+  let isLoop = false;
+
+  // Función para cambiar fondos de video
+  function changeBackground(backgroundConfig) {
+      console.log('🎬 Cambiando fondo:', backgroundConfig);
+      
+      const container = document.querySelector('.background-container');
+      if (!container) {
+          console.error('❌ No se encuentra .background-container');
+          return;
+      }
+      
+      // Remover video anterior
+      const oldVideo = container.querySelector('.background-video');
+      if (oldVideo) {
+          oldVideo.classList.remove('active');
+          setTimeout(() => {
+              if (oldVideo.parentNode) {
+                  oldVideo.parentNode.removeChild(oldVideo);
+              }
+          }, 1000);
+      }
+      
+      if (backgroundConfig.type === "video" && backgroundConfig.src) {
+          // Crear nuevo elemento video
+          const newVideo = document.createElement('video');
+          newVideo.className = 'background-video';
+          newVideo.autoplay = true;
+          newVideo.muted = true;
+          newVideo.loop = true;
+          
+          const source = document.createElement('source');
+          source.src = backgroundConfig.src;
+          source.type = 'video/mp4';
+          newVideo.appendChild(source);
+          
+          // Manejar errores
+          newVideo.addEventListener('error', () => {
+              console.warn('❌ Error cargando video:', backgroundConfig.src);
+              container.style.background = 'linear-gradient(135deg, #000010, #0a0028, #020024)';
+          });
+          
+          // Agregar al contenedor
+          container.appendChild(newVideo);
+          
+          // Activar después de un breve delay
+          setTimeout(() => {
+              newVideo.classList.add('active');
+          }, 50);
+      }
+  }
+
+  function loadSong(index) {
+      const audioPlayer = document.getElementById("audio-player");
+      const songTitle = document.getElementById("song-title");
+      const cover = document.querySelector(".music-player .cover");
+      
+      const song = songs[index];
+      songTitle.textContent = song.title;
+      cover.src = song.cover;
+      audioPlayer.src = song.src;
+      audioPlayer.loop = isLoop; // ← Mantener estado del loop
+      
+      // 🎬 CAMBIAR FONDO CON CADA CANCIÓN
+      if (song.background) {
+          changeBackground(song.background);
+      }
+      
+      // Reproducir automáticamente
+      audioPlayer.play().catch(e => {
+          console.log("Reproducción automática bloqueada:", e);
+      });
+  }
+
+  // ===== CONTROLES DEL REPRODUCTOR =====
+  function setupMusicControls() {
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const loopBtn = document.getElementById('loop-btn');
+    const audioPlayer = document.getElementById('audio-player');
+
+    // Botón Anterior
+    prevBtn.addEventListener('click', () => {
+      currentSong = (currentSong - 1 + songs.length) % songs.length;
+      loadSong(currentSong);
+    });
+
+    // Botón Siguiente
+    nextBtn.addEventListener('click', () => {
+      currentSong = (currentSong + 1) % songs.length;
+      loadSong(currentSong);
+    });
+
+    // Botón Loop/Repetir
+    loopBtn.addEventListener('click', () => {
+      isLoop = !isLoop;
+      loopBtn.classList.toggle('active', isLoop);
+      audioPlayer.loop = isLoop;
+      
+      if (isLoop) {
+        loopBtn.style.color = '#6c63ff';
+        loopBtn.title = 'Desactivar repetición';
+      } else {
+        loopBtn.style.color = '';
+        loopBtn.title = 'Activar repetición';
+      }
+    });
+
+    // También mantener la funcionalidad de flechas del teclado
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") {
+        currentSong = (currentSong + 1) % songs.length;
+        loadSong(currentSong);
+      } else if (e.key === "ArrowLeft") {
+        currentSong = (currentSong - 1 + songs.length) % songs.length;
+        loadSong(currentSong);
+      } else if (e.key === "l" || e.key === "L") {
+        // Tecla L para loop - simular click
+        loopBtn.click();
+      }
+    });
+  }
+
+  // Cambiar automáticamente al terminar la canción
+  document.getElementById("audio-player").addEventListener("ended", () => {
+      if (!isLoop) {
+          currentSong = (currentSong + 1) % songs.length;
+          loadSong(currentSong);
+      }
+  });
+
+  // Cargar primera canción cuando la página esté lista
+  window.addEventListener('load', () => {
+      // Esperar un poco para que el splash se muestre primero
+      setTimeout(() => {
+          loadSong(currentSong);
+          setupMusicControls(); // ← Inicializar controles
+      }, 1000);
+  });
+
+  // =============================================
+  // DETECTOR DE ORIENTACIÓN PARA MÓVIL
+  // =============================================
+  function checkOrientation() {
+      const message = document.getElementById('rotate-message');
+      const mainContent = document.getElementById('main-content');
+      
+      if (window.innerWidth < 768) {
+          if (window.matchMedia("(orientation: portrait)").matches) {
+              message.style.display = 'flex';
+              mainContent.style.display = 'none';
+          } else {
+              message.style.display = 'none';
+              mainContent.style.display = 'block';
+          }
+      } else {
+          message.style.display = 'none';
+          mainContent.style.display = 'block';
+      }
+  }
+
+  // Ejecutar al cargar y al girar pantalla
+  window.addEventListener('load', checkOrientation);
+  window.addEventListener('resize', checkOrientation);
+  window.addEventListener('orientationchange', function() {
+      setTimeout(checkOrientation, 100);
+  });
+  </script>
+
+  <!-- Mensaje para girar pantalla -->
+  <div class="rotate-message" id="rotate-message">
+    <i class="fas fa-mobile-alt"></i>
+    <p>Gira tu dispositivo</p>
+    <span>Para una mejor experiencia visual</span>
+  </div>
+
+</body>
+</html>

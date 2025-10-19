@@ -1,0 +1,775 @@
+/* Fuentes locales */
+@font-face {
+  font-family: 'Audiowide';
+  src: url('fonts/Audiowide-Regular.ttf ') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Michroma';
+  src: url('fonts/Michroma-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Reset y estilos básicos */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  color: #fff;
+  font-family: 'Michroma', sans-serif;
+}
+
+/* ===== SISTEMA DE FONDOS DINÁMICO ===== */
+.background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  background: #000010; /* Fondo por defecto */
+}
+
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  z-index: -2;
+}
+
+.background-video.active {
+  opacity: 1;
+}
+
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(
+      circle at 20% 80%,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(124, 58, 237, 0.15) 0%,
+      transparent 50%
+    );
+  /* ← SIN FONDO OSCURO, solo efectos de luz */
+  z-index: -1;
+  mix-blend-mode: screen;         /* ← MODO MEZCLA PARA BRILLO */
+}
+
+/* ===== SPLASH SCREEN ===== */
+#splash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #000010, #0a0028, #020024);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  cursor: pointer;
+}
+
+.splash-content {
+  text-align: center;
+  color: white;
+  animation: fadeIn 1s ease;
+}
+
+.splash-logo {
+  width: 120px;
+  height: 120px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  animation: bounce 2s infinite;
+}
+
+#splash h1 {
+  font-family: 'Audiowide', sans-serif;
+  font-size: 3em;
+  margin-bottom: 10px;
+}
+
+#splash p {
+  font-family: 'Michroma', sans-serif;
+  margin-bottom: 30px;
+  color: rgba(255,255,255,0.8);
+}
+
+#enter-btn {
+  padding: 15px 30px;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #1b1e52, #360a83);
+  color: #fff;
+  cursor: pointer;
+  font-family: 'Michroma', sans-serif;
+  animation: pulse 1.2s infinite;
+  transition: all 0.3s ease;
+}
+
+#enter-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+}
+
+.spinner {
+  border: 4px solid rgba(163, 198, 241, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid rgb(77, 67, 137);
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 25px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Contenido principal inicialmente oculto */
+#main-content {
+  display: none;
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.page-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+/* ===== CONTENIDO PRINCIPAL ===== */
+
+/* Títulos y texto */
+h1, .logo-text {
+  font-family: 'Audiowide', sans-serif;
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 80px 20px;
+}
+.hero .logo {
+  width: 100px;
+  margin-bottom: 20px;
+  border-radius: 16px;
+  border: 2px solid rgba(255,255,255,0.1);
+}
+.hero h1 {
+  font-size: 3em;
+  color: #ffffff;
+  margin: 0.2em 0 1.5em 0; /* ← MARGEN AGREGADO: 1.5em abajo */
+}
+.hero p {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  color: rgba(227, 226, 226, 0.7);
+}
+.hero .btn {
+  display: inline-block;
+  padding: 14px 28px;
+  border-radius: 10px;
+  background: linear-gradient(90deg,#0e182b,#330583);
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hero .btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+/* Secciones home */
+section {
+  max-width: 800px;
+  margin: 40px 20px;
+  text-align: center;
+}
+section h2 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+section p {
+  color: rgba(255,255,255,0.8);
+}
+
+/* Footer*/
+footer {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  font-size: 0.85em;
+  color: rgba(255,255,255,0.6);
+}
+
+/* Redes */
+.links a {
+  display: inline-block;
+  margin: 0 14px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: none;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 0 3px rgba(255, 252, 252, 0.76);
+  transition: all 0.3s ease;
+}
+
+.links i {
+  font-size: 28px;
+  vertical-align: middle;
+}
+
+.links a:hover {
+  box-shadow: 
+    0 0 10px #27235d,
+    0 0 20px #ff00ff,
+    0 0 30px #7e58c4,
+    0 0 40px #ff00ff;
+  background: none;
+  color: #b300ff; 
+  text-shadow: 0 0 10px #b300ff, 0 0 20px #b300ff, 0 0 30px #b300ff;
+  transform: scale(1.1);
+}
+
+/* Reproductor de música */
+.music-player {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(20, 20, 20, 0.015);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 15px;
+  color: #ffffff;
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.music-player:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(120, 0, 255, 0.5);
+}
+
+.cover {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.song-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.song-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.song-artist {
+  font-size: 12px;
+  color: #ccc;
+}
+
+/* Audio player - TRANSPARENTE COINCIDENTE */
+.music-player audio {
+  height: 32px;
+  filter: none;
+  outline: none;
+  border-radius: 10px;
+  background: transparent;
+}
+
+.music-player audio::-webkit-media-controls-panel {
+  background: rgb(255, 255, 255) !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgb(255, 251, 251);
+  border-radius: 10px;
+}
+
+.music-player audio::-webkit-media-controls-play-button {
+  background-color: rgb(255, 255, 255) !important;
+  border-radius: 50% !important;
+}
+
+.music-player audio::-webkit-media-controls-current-time-display,
+.music-player audio::-webkit-media-controls-time-remaining-display {
+  color: #000000 !important;
+  font-size: 11px;
+}
+
+.music-player audio::-webkit-media-controls-timeline {
+  background-color: rgb(255, 255, 255) !important;
+  border-radius: 5px !important;
+  margin: 0 8px;
+}
+
+.music-player audio::-webkit-media-controls-volume-slider {
+  background-color: rgb(255, 255, 255) !important;
+  border-radius: 5px !important;
+}
+
+/* Móvil: que se vea centrado abajo */
+@media (max-width: 768px) {
+  .music-player {
+    right: 50%;
+    bottom: 10px;
+    transform: translateX(50%);
+    width: 90%;
+    justify-content: space-between;
+  }
+
+  .music-player:hover {
+    transform: translateX(50%) scale(1.02);
+  }
+}
+
+/* ELIMINAR - Este es el viejo sistema de fondo */
+/*
+.fondo-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+*/
+
+@media (max-width: 768px) {
+  .links a {
+    margin: 0 15px 20px 15px; /* ← MÁS MARGEN */
+    padding: 14px 18px; /* ← MÁS GRANDES */
+  }
+  
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px; /* ← MÁS ESPACIO */
+  }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .links a {
+    margin: 0 12px 18px 12px; /* ← MÁS MARGEN */
+    padding: 12px 16px; /* ← MÁS GRANDES */
+  }
+  
+  .links i {
+    font-size: 26px; /* ← ICONOS MÁS GRANDES */
+  }
+}
+
+/* Para móviles en horizontal - DETECCIÓN MEJORADA */
+@media (max-width: 900px) and (orientation: landscape) {
+  .hero {
+    padding: 20px 15px !important;
+    transform: scale(0.85);
+    transform-origin: top center;
+  }
+  
+   .hero .logo {
+    width: 70px;
+    margin-bottom: 8px;
+  }
+  
+  .hero h1 {
+    font-size: 1.8em;
+    margin: 0.1em 0;
+  }
+  
+  .hero p {
+    font-size: 0.9em;
+    margin-bottom: 12px;
+    display: none;
+  }
+  
+  .links {
+    gap: 6px;
+    margin-top: 10px;
+  }
+  
+  .links a {
+    padding: 10px 14px;
+    margin: 0 5px 8px 5px;
+  }
+  
+  .links i {
+    font-size: 22px;
+  }
+  
+  footer {
+    bottom: 5px;
+    font-size: 0.6em;
+  }
+  
+  .music-player {
+    bottom: 5px;
+    right: 5px;
+    transform: scale(0.8);
+    transform-origin: bottom right;
+  }
+} /* ← CIERRA TODO EL @media AQUÍ */
+
+
+/* Para horizontal MUY corta */
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 400px) {
+  .hero {
+    padding: 15px 10px !important;
+    transform: scale(0.75);
+  }
+  
+  .hero h1 {
+    font-size: 1.5em;
+  }
+  
+  .hero p {
+    display: none; /* ← OCULTAR texto completamente */
+  }
+  
+   .links a {
+    padding: 8px 12px;     /* ← MÁS GRANDE */
+    margin: 0 4px 6px 4px; /* ← MÁS MARGEN */
+  }
+  
+   .links i {
+    font-size: 20px;       /* ← ICONOS MÁS GRANDES */
+  }
+}
+
+/* Reproductor más pequeño en móvil vertical */
+@media (max-width: 768px) and (orientation: portrait) {
+  .music-player {
+    transform: translateX(50%) scale(0.85); /* ← MÁS PEQUEÑO */
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  
+  .cover {
+    width: 50px; /* ← Más pequeño */
+    height: 50px;
+  }
+  
+  .song-info {
+    min-width: 0; /* ← Permite que se encoja más */
+  }
+  
+  .song-title {
+    font-size: 12px; /* ← Texto más pequeño */
+  }
+  
+  .music-player audio {
+    height: 28px; /* ← Controles más compactos */
+    min-width: 120px;
+  }
+}
+
+/* Para móviles muy pequeños */
+@media (max-width: 480px) and (orientation: portrait) {
+  .music-player {
+    transform: translateX(50%) scale(0.75); /* ← AÚN MÁS PEQUEÑO */
+    padding: 6px 10px;
+    bottom: 5px;
+  }
+  
+  .cover {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .song-title {
+    font-size: 11px;
+  }
+  
+  .music-player audio {
+    height: 26px;
+    min-width: 110px;
+  }
+}
+
+/* Splash para móviles en horizontal */
+@media (max-width: 900px) and (orientation: landscape) {
+  .splash-content {
+    transform: scale(0.8);
+    transform-origin: center;
+  }
+  
+  .splash-logo {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+  }
+  
+  #splash h1 {
+    font-size: 2.2em;
+    margin-bottom: 8px;
+  }
+  
+  #splash p {
+    font-size: 1em;
+    margin-bottom: 20px;
+  }
+  
+  #enter-btn {
+    padding: 12px 25px;
+    font-size: 1em;
+  }
+  
+  .spinner {
+    width: 30px;
+    height: 30px;
+    margin: 15px auto;
+  }
+}
+
+/* Splash para horizontal MUY corta */
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 400px) {
+  .splash-content {
+    transform: scale(0.7);
+  }
+  
+  .splash-logo {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+  }
+  
+  #splash h1 {
+    font-size: 1.8em;
+    margin-bottom: 5px;
+  }
+  
+  #splash p {
+    font-size: 0.9em;
+    margin-bottom: 15px;
+  }
+  
+  #enter-btn {
+    padding: 10px 20px;
+    font-size: 0.9em;
+  }
+  
+  .spinner {
+    width: 25px;
+    height: 25px;
+    margin: 10px auto;
+  }
+}
+
+/* Splash para horizontal EXTREMA (muy corta) */
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 300px) {
+  .splash-content {
+    transform: scale(0.6);
+  }
+  
+  #splash p {
+    display: none; /* ← Oculta texto en pantallas muy cortas */
+  }
+  
+  .spinner {
+    display: none; /* ← Oculta spinner si no hay espacio */
+  }
+}
+
+/* ===== MENSAJE GIRAR DISPOSITIVO - CORREGIDO ===== */
+.rotate-message {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #000010, #0a0028, #020024);
+    z-index: 10000;
+    
+    /* CENTRADO PERFECTO */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+    color: white;
+    font-family: 'Michroma', sans-serif;
+    padding: 20px;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.rotate-message i {
+    font-size: 4rem;
+    margin-bottom: 25px;
+    color: #6c63ff;
+    animation: rotateDevice 2s infinite ease-in-out;
+}
+
+.rotate-message p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+    font-family: 'Audiowide', sans-serif;
+    text-shadow: 0 0 10px rgba(108, 99, 255, 0.5);
+}
+
+.rotate-message span {
+    font-size: 1rem;
+    opacity: 0.8;
+    max-width: 80%;
+    line-height: 1.4;
+}
+
+/* Animación mejorada */
+@keyframes rotateDevice {
+    0% { 
+        transform: rotate(0deg) scale(1);
+    }
+    25% { 
+        transform: rotate(90deg) scale(1.1);
+    }
+    50% { 
+        transform: rotate(90deg) scale(1.1);
+    }
+    75% { 
+        transform: rotate(0deg) scale(1);
+    }
+    100% { 
+        transform: rotate(0deg) scale(1);
+    }
+}
+
+/* REGLAS DE VISIBILIDAD - MANTENER ESTAS */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+    .rotate-message {
+        display: flex !important;
+    }
+    
+    #main-content {
+        display: none !important;
+    }
+    
+    body {
+        overflow: hidden !important;
+    }
+}
+
+@media screen and (max-width: 768px) and (orientation: landscape) {
+    .rotate-message {
+        display: none !important;
+    }
+}
+
+@media screen and (min-width: 769px) {
+    .rotate-message {
+        display: none !important;
+    }
+}
+
+/* CONTROLES DEL REPRODUCTOR */
+.music-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.control-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.control-btn.active {
+  background: #6c63ff;
+  box-shadow: 0 0 10px rgba(108, 99, 255, 0.5);
+}
+
+.control-btn i {
+  font-size: 14px;
+}
+
+/* Para móviles - ajustar tamaños */
+@media (max-width: 768px) {
+  .control-btn {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .control-btn i {
+    font-size: 12px;
+  }
+  
+  .music-controls {
+    gap: 6px;
+  }
+}
