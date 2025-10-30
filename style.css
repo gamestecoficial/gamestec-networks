@@ -65,7 +65,7 @@ html, body {
     ),
     radial-gradient(
       circle at 80% 20%,
-      rgba(124, 58, 237, 0.15) 0%,
+      rgba(255, 255, 255, 0.139) 0%,
       transparent 50%
     );
   z-index: -1;
@@ -79,7 +79,7 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #000010, #0a0028, #020024);
+  background: linear-gradient(135deg, #000010, #010005, #040222);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -89,7 +89,7 @@ html, body {
 
 .splash-content {
   text-align: center;
-  color: white;
+  color: rgba(255, 55, 0, 0.778);
   animation: fadeIn 1s ease;
 }
 
@@ -118,8 +118,8 @@ html, body {
   font-size: 1.2em;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(90deg, #1b1e52, #360a83);
-  color: #fff;
+  background: linear-gradient(90deg, #1b1e52, #120627);
+  color: #ffffff;
   cursor: pointer;
   font-family: 'Michroma', sans-serif;
   animation: pulse 1.2s infinite;
@@ -128,17 +128,17 @@ html, body {
 
 #enter-btn:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+  box-shadow: 0 0 50px rgba(244, 15, 3, 0.516);
 }
 
 .spinner {
-  border: 4px solid rgba(163, 198, 241, 0.3);
+  border: 4px solid rgba(255, 179, 0, 0.257);
   border-radius: 50%;
-  border-top: 4px solid rgb(77, 67, 137);
+  border-top: 4px solid rgb(202, 3, 0);
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
-  margin: 25px auto;
+  margin: 30px auto;
 }
 
 @keyframes spin {
@@ -186,14 +186,14 @@ html, body {
 .hero h1 {
   font-family: 'Audiowide', sans-serif;
   font-size: 3em;
-  color: #ffffff;
-  margin: 0.2em 0;
+  color: #f63737d2;
+  margin: 0.3em 0;
 }
 
 .hero p {
   font-size: 1.2em;
-  margin-bottom: 20px;
-  color: rgba(227, 226, 226, 0.7);
+  margin-bottom: 25px;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* ===== REDES SOCIALES ===== */
@@ -209,10 +209,10 @@ html, body {
   padding: 14px 18px;
   border-radius: 8px;
   background: none;
-  color: #ffffff;
+  color: #f63737d2;
   text-decoration: none;
   font-weight: 600;
-  box-shadow: 0 0 3px rgba(255, 252, 252, 0.76);
+  box-shadow: 0 0 5px rgb(30, 2, 2);
   transition: all 0.3s ease;
 }
 
@@ -223,13 +223,13 @@ html, body {
 
 .links a:hover {
   box-shadow: 
-    0 0 10px #27235d,
-    0 0 20px #ff00ff,
-    0 0 30px #7e58c4,
-    0 0 40px #ff00ff;
+    0 0 10px #2e0505,
+    0 0 20px #120101,
+    0 0 30px #561100,
+    0 0 40px #1c0300;
   background: none;
-  color: #b300ff; 
-  text-shadow: 0 0 10px #b300ff, 0 0 20px #b300ff, 0 0 30px #b300ff;
+  color: #ff0000; 
+  text-shadow: 0 0 10px #ff3c00, 0 0 20px #ff6f02, 0 0 30px #ff5900;
   transform: scale(1.1);
 }
 
@@ -253,7 +253,7 @@ html, body {
 
 .music-player:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 25px rgba(120, 0, 255, 0.5);
+  box-shadow: 0 0 25px rgba(188, 0, 0, 0.48);
 }
 
 .cover {
@@ -297,13 +297,13 @@ html, body {
 }
 
 .control-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.234);
   transform: scale(1.1);
 }
 
 .control-btn.active {
-  background: #6c63ff;
-  box-shadow: 0 0 10px rgba(108, 99, 255, 0.5);
+  background: #00000084;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .control-btn i {
@@ -428,11 +428,11 @@ html, body {
   appearance: none;
   width: 16px;
   height: 16px;
-  background: #6c63ff;
+  background: #000000;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 0 5px rgba(108, 99, 255, 0.5);
+  box-shadow: 0 0 5px rgba(16, 8, 8, 0.5);
 }
 
 .custom-slider::-webkit-slider-thumb:hover {
@@ -449,7 +449,7 @@ html, body, * {
 .custom-cursor {
   width: 6px;
   height: 6px;
-  background: #ffffff;
+  background: #000000;
   border-radius: 50%;
   position: fixed;
   pointer-events: none;
@@ -457,7 +457,7 @@ html, body, * {
   transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   box-shadow: 
     0 0 0 1px rgba(255, 255, 255, 0.2),
-    0 0 10px rgba(108, 99, 255, 0.8);
+    0 0 10px rgba(132, 23, 23, 0.8);
 }
 
 .links a:hover ~ .custom-cursor,
@@ -465,7 +465,7 @@ html, body, * {
 button:hover ~ .custom-cursor,
 .music-player:hover ~ .custom-cursor {
   transform: scale(2.5);
-  background: #9b9eff;
+  background: #741111;
   box-shadow: 
     0 0 0 2px rgba(255, 105, 180, 0.3),
     0 0 20px rgba(255, 188, 222, 0.9);
@@ -495,7 +495,7 @@ button:hover ~ .custom-cursor,
 .rotate-message i {
   font-size: 4rem;
   margin-bottom: 25px;
-  color: #6c63ff;
+  color: #3a0808;
   animation: rotateDevice 2s infinite ease-in-out;
 }
 
@@ -504,7 +504,7 @@ button:hover ~ .custom-cursor,
   font-weight: bold;
   margin-bottom: 12px;
   font-family: 'Audiowide', sans-serif;
-  text-shadow: 0 0 10px rgba(108, 99, 255, 0.5);
+  text-shadow: 0 0 10px rgba(180, 48, 48, 0.5);
 }
 
 .rotate-message span {
@@ -529,7 +529,7 @@ footer {
   width: 100%;
   text-align: center;
   font-size: 0.85em;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255, 255, 255, 0.371);
 }
 
 /* ===== MEDIA QUERIES ===== */
@@ -950,7 +950,7 @@ body:-webkit-full-screen #fullscreen-btn i {
     transform: translate(-50%, -50%) scale(0.5);
     width: 80px;
     height: 80px;
-    background: rgba(108, 99, 255, 0.9);
+    background: rgba(154, 27, 27, 0.9);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1074,3 +1074,4 @@ body:-webkit-full-screen #fullscreen-btn i {
     0%, 100% { opacity: 0; }
     50% { opacity: 1; }
 }
+
